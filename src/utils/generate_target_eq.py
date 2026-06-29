@@ -88,7 +88,7 @@ def generate_target_eq(
         "target_curve": eq_curve.astype(np.float32),
         "eq_curve_raw": eq_curve_raw.astype(np.float32),
         "personalized_target": personalized_target.astype(np.float32),
-        "audio_charcacter": {
+        "audio_character": {
             "bass_ratio": float(bass_ratio),
             "mid_ratio": float(mid_ratio),
             "treble_ratio": float(treble_ratio)
