@@ -1,200 +1,224 @@
-# Multimodal Personalized EQ Prediction
+# Multimodal Personalized EQ Prediction 🎧✨
 
-Deep learning project for predicting personalized equalizer settings using multimodal input.
+This project leverages deep learning to predict personalized audio equalizer (EQ) settings by utilizing multimodal input data. It combines audio features, device-specific frequency responses, and user preference data to intelligently adjust EQ settings, aiming for an audio experience that better matches individual listening preferences.
 
-The model uses audio features, device information, and user preference data to predict target EQ values. This project compares several input combinations through baseline evaluation and ablation study.
+## Table of Contents
 
-## Project Overview
+* [Project Overview](#project-overview)
+* [Features](#features)
+* [Tech Stack](#tech-stack)
+* [Dataset](#dataset)
+* [Model Input Configurations](#model-input-configurations)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Project Structure](#project-structure)
+* [Evaluation Metrics](#evaluation-metrics)
+* [Baseline Comparison](#baseline-comparison)
+* [Ablation Study](#ablation-study)
+* [Key Findings](#key-findings)
+* [License](#license)
+* [Contributing](#contributing)
+* [Author](#author)
 
-Personalized equalizer prediction aims to estimate EQ settings that better match user listening preferences. Instead of using one fixed EQ profile for all users, this project learns from several data sources:
+## Project Overview 🚀
 
-- Audio data
-- Squiglink device data
-- User preference data
+Personalized equalizer prediction is a complex task that aims to tailor audio output to individual user tastes. This project moves beyond generic EQ profiles by learning from several distinct data sources:
 
-The final model combines all available modalities to produce better EQ prediction.
+- **Audio Data**: Extracted Mel-spectrograms to capture the acoustic characteristics of audio content.
+- **Device Data**: Frequency response data specific to audio playback devices (e.g., headphones, speakers).
+- **User Preference Data**: Learned embeddings representing individual listening preferences.
 
-## Dataset
+The ultimate goal is to build a model that fuses these modalities to deliver superior EQ predictions, enhancing the listening experience.
 
-This project uses three main data sources:
+## Features ⭐
 
-| Dataset | Amount | Description |
-|---|---:|---|
-| GTZAN Audio | 300 data | Audio samples used as the main audio input |
-| Squiglink Device | 30 data | Device-related information |
-| User Preference | 50 data | User preference data for personalized EQ learning |
+* **Multimodal Fusion**: Integrates audio features, device frequency responses, and user preferences.
+* **Personalized EQ Prediction**: Tailors EQ settings based on individual user preferences.
+* **Comprehensive Evaluation**: Assesses model performance using various metrics including MSE, MAE, RMSE, Spectral Convergence (SC), and Log Spectral Distance (LSD).
+* **Ablation Studies**: Analyzes the contribution of each modality (audio, device, preference) to the overall prediction accuracy.
+* **Baseline Comparisons**: Benchmarks against simple methods like Zero EQ and Mean EQ to demonstrate the model's effectiveness.
+* **Visualization Tools**: Generates plots for training history, correlation matrices, scatter plots of predictions vs. targets, and sensitivity analyses.
 
-## Model Input
+## Tech Stack 🛠️
 
-The model is evaluated using several input combinations:
+* **Primary Language**: Python 🐍
+* **Frameworks**: PyTorch, NumPy, Pandas, Matplotlib, Librosa, Scikit-learn
+* **Data Handling**: CSV, NPZ
+* **Environment**: Jupyter Notebooks (for exploration)
 
-| Model Variant | Input Used |
-|---|---|
-| Audio Only | Audio feature only |
-| Audio + Device | Audio feature and device information |
-| Audio + Preference | Audio feature and user preference |
-| Device + Preference | Device information and user preference |
-| Full Model | Audio, device, and user preference |
+## Dataset 📊
 
-## Project Structure
+This project utilizes three primary datasets:
+
+| Dataset             | Amount     | Description                                     |
+| ------------------- | ---------- | ----------------------------------------------- |
+| GTZAN Audio         | 300 samples| Audio samples for feature extraction            |
+| Squiglink Device    | 30 devices | Device-specific frequency response data         |
+| User Preference     | 50 profiles| Learned user preference vectors                 |
+
+## Model Input Configurations ⚙️
+
+The model's performance is evaluated across different input combinations to understand the impact of each modality:
+
+| Model Variant         | Input Used                                 |
+| --------------------- | ------------------------------------------ |
+| Audio Only            | Audio features only                        |
+| Audio + Device        | Audio features and device information      |
+| Audio + Preference    | Audio features and user preference         |
+| Device + Preference   | Device information and user preference     |
+| **Full Model**        | Audio, device, and user preference         |
+
+## Installation 📋
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/bryanogya/multimodal-personalized-eq-prediction.git
+   cd multimodal-personalized-eq-prediction
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+## Usage ▶️
+
+This project provides several entry points for training, evaluation, and visualization.
+
+**Core Scripts:**
+
+* **Training**: `python main.py --mode train`
+* **Auxiliary Training (for response curve prediction)**: `python main.py --mode train_aux`
+* **Evaluation**: `python main.py --mode evaluate`
+* **Baseline Evaluation**: `python main.py --mode baseline`
+* **Ablation Study**: `python main.py --mode ablation`
+* **Inference/Prediction**: `python main.py --mode predict` (Requires specifying input files)
+
+**Visualization Scripts:**
+
+* **Training Plots**: `python src/visualization/training_plot.py`
+* **Ablation Comparison Plots**: `python src/visualization/ablation_comparison.py`
+* **Baseline Comparison Plots**: `python src/visualization/baseline_comparison.py`
+* **Per-Band Error Histograms**: `python src/visualization/histogram_error.py`
+* **Prediction vs. Target Scatter Plots**: `python src/visualization/scatter_prediction.py`
+* **Sensitivity Analysis Plots**: `python src/visualization/sensitivity_plot.py`
+* **Target Curve Visualizations**: `python src/visualization/target_curve.py`
+
+**Example Prediction:**
+
+To predict EQ for a specific audio sample, device response, and preference:
+
+```bash
+python inference/predict.py \
+    --audio data/processed/audio/sample_0001.npy \
+    --device data/processed/device/7Hz Salnotes Zero.npy \
+    --preference data/processed/preferences/user_preferences.npy
+```
+
+## Project Structure 📁
 
 ```text
 multimodal-personalized-eq-prediction/
-├── configs/
+├── configs/         # Configuration files (paths, model params, training settings)
+│   ├── audio.py
+│   ├── dataset.py
+│   ├── eq.py
+│   ├── frequencies.py
+│   ├── model.py
 │   ├── paths.py
 │   ├── plot_style.py
-│   └── eq.py
+│   ├── preferences.py
+│   └── training.py
 │
 ├── data/
-│   └── README.md
+│   ├── raw/         # Raw datasets (audio, device responses)
+│   ├── processed/   # Processed data (features, normalized responses)
+│   ├── metadata/    # Metadata CSV files
+│   └── splits/      # Train/val/test split definitions
 │
 ├── src/
-│   ├── dataset/
-│   ├── models/
-│   ├── training/
-│   ├── evaluation/
-│   └── visualization/
+│   ├── dataset/     # Data loading and preprocessing
+│   ├── evaluation/  # Evaluation scripts and metrics
+│   ├── inference/   # Inference and prediction logic
+│   ├── models/      # Neural network model definitions
+│   ├── preprocessing/ # Scripts for data preprocessing
+│   ├── training/    # Training scripts and loss functions
+│   └── visualization/ # Scripts for generating plots and reports
 │
-├── checkpoints/
-│   ├── baseline/
+├── checkpoints/    # Saved model checkpoints and experiment results
 │   ├── ablation/
+│   ├── aux_model/
 │   └── full_model/
 │
 ├── outputs/
+│   ├── figures/     # Generated plots and visualizations
 │   ├── baseline/
-│   ├── ablation/
-│   ├── evaluation/
-│   └── figures/
+│   └── ablation/
 │
-├── requirements.txt
-└── README.md
-````
-
-## Evaluation Metrics
-
-The model performance is evaluated using:
-
-| Metric | Description             |
-| ------ | ----------------------- |
-| MSE    | Mean Squared Error      |
-| MAE    | Mean Absolute Error     |
-| RMSE   | Root Mean Squared Error |
-| SC     | Spectral Convergence    |
-| LSD    | Log Spectral Distance   |
-
-Lower values indicate better performance for MSE, MAE, RMSE, and LSD.
-
-## Baseline Comparison
-
-This project compares the proposed model with simple baseline methods:
-
-| Baseline       | Description                              |
-| -------------- | ---------------------------------------- |
-| Zero EQ        | Uses zero equalizer values as prediction |
-| Mean EQ        | Uses average EQ values as prediction     |
-| Proposed Model | Uses the trained deep learning model     |
-
-The baseline comparison is used to verify whether the model learns meaningful EQ patterns beyond simple fixed predictions.
-
-## Ablation Study
-
-An ablation study is performed to measure the contribution of each modality.
-
-The evaluated variants are:
-
-* Audio Only
-* Audio + Device
-* Audio + Preference
-* Device + Preference
-* Full Model
-
-This analysis helps identify whether audio, device, and preference features improve personalized EQ prediction.
-
-## Output Examples
-
-The project generates several visual outputs:
-
-* Dataset summary
-* EQ target curves
-* Prediction vs target comparison
-* Baseline comparison bar charts
-* Ablation study comparison bar charts
-* Histogram per EQ dimension
-* Correlation matrix
-* 3D preference scatter plot
-
-Example output folders:
-
-```text
-outputs/
-├── figures/
-├── baseline/
-├── ablation/
-└── evaluation/
+├── requirements.txt # Project dependencies
+└── main.py          # Main entry point for running experiments
 ```
 
-## How to Run
+## Evaluation Metrics 🎯
 
-Install the required dependencies:
+Model performance is assessed using the following metrics:
 
-```bash
-pip install -r requirements.txt
-```
+| Metric | Description                                       |
+| ------ | ------------------------------------------------- |
+| MSE    | Mean Squared Error (lower is better)              |
+| MAE    | Mean Absolute Error (lower is better)             |
+| RMSE   | Root Mean Squared Error (lower is better)         |
+| SC     | Spectral Convergence (higher is better)           |
+| LSD    | Log Spectral Distance (lower is better)           |
 
-Run training:
+## Baseline Comparison ⚖️
 
-```bash
-python train.py
-```
+This project compares the proposed deep learning model against simple baseline methods:
 
-Run evaluation:
+| Baseline       | Description                                      |
+| -------------- | ------------------------------------------------ |
+| Zero EQ        | Predicts zero gain for all EQ bands.           |
+| Mean EQ        | Predicts the average EQ values from the training set. |
+| Proposed Model | The trained multimodal deep learning model.      |
 
-```bash
-python evaluate.py
-```
+The baseline comparison validates the model's ability to learn meaningful EQ patterns beyond trivial predictions.
 
-Generate visualization:
+## Ablation Study 🔬
 
-```bash
-python visualize.py
-```
+An ablation study is conducted to quantify the impact of each input modality on EQ prediction performance. The following variants are evaluated:
 
-Adjust the command based on the actual script names in the project.
+*   **Audio Only**
+*   **Audio + Device**
+*   **Audio + Preference**
+*   **Device + Preference**
+*   **Full Model (Audio + Device + Preference)**
 
-## Results
+This analysis highlights the contribution of each feature set to personalized EQ prediction.
 
-The Full Model is expected to perform better than partial input combinations because it uses complete multimodal information.
+## Key Findings 💡
 
-The main comparison focuses on:
+*   **Audio features** serve as the primary signal for EQ prediction.
+*   **Device information** aids in understanding playback characteristics, refining predictions.
+*   **User preference data** is crucial for personalization, adapting EQ to individual tastes.
+*   The **Full Model**, utilizing all modalities, demonstrates the most robust performance, indicating the synergistic benefit of combining diverse data sources.
+*   The ablation study confirms the importance of **multimodal integration** for achieving accurate and personalized EQ.
 
-* How much better the proposed model is compared to Zero EQ and Mean EQ
-* How much each modality contributes to EQ prediction
-* Whether user preference improves personalization
-* Whether device information improves EQ estimation
+## License 📜
 
-## Key Findings
+This project is intended for academic and research purposes. (No specific license file found in the repository).
 
-* Audio features provide the main signal for EQ prediction.
-* Device information helps the model understand playback characteristics.
-* User preference data supports personalization.
-* The Full Model gives the most complete input representation.
-* Ablation study confirms the importance of combining multiple modalities.
+## Contributing 🤝
 
-## Technologies Used
+Contributions are welcome! Please feel free to submit pull requests or open issues for any improvements or bug fixes.
 
-* Python
-* NumPy
-* Matplotlib
-* PyTorch or TensorFlow
-* JSON
-* NPZ
-* Git and GitHub
+## Author 👨‍💻
 
-## Author
+*   **Bryan Ogya Kusuma**
 
-Bryan Ogya Kusuma
+## Important Links 🔗
 
-## License
+*   **Repository**: [multimodal-personalized-eq-prediction](https://github.com/bryanogya/multimodal-personalized-eq-prediction)
+*   **GTZAN Dataset**: [GTZAN Dataset-Music Genre Classification](https://www.kaggle.com/datasets/andradaolteanu/gtzan-dataset-music-genre-classification)
+*   **SquigLink**: [Squiglink - IEM frequency response database by Super* Review](https://squig.link/)
 
-This project is intended for academic and research purposes.
-
+---
