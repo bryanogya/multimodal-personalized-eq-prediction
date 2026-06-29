@@ -41,10 +41,9 @@ The ultimate goal is to build a model that fuses these modalities to deliver sup
 
 ## Tech Stack 🛠️
 
-* **Primary Language**: Python 🐍
+* **Primary Language**: Python 
 * **Frameworks**: PyTorch, NumPy, Pandas, Matplotlib, Librosa, Scikit-learn
-* **Data Handling**: CSV, NPZ
-* **Environment**: Jupyter Notebooks (for exploration)
+* **Data Handling**: CSV, NPZ, NPY
 
 ## Dataset 📊
 
@@ -205,7 +204,7 @@ This analysis highlights the contribution of each feature set to personalized EQ
 
 ## License 📜
 
-This project is intended for academic and research purposes. (No specific license file found in the repository).
+This project is intended for academic and research purposes.
 
 ## Contributing 🤝
 
@@ -214,6 +213,8 @@ Contributions are welcome! Please feel free to submit pull requests or open issu
 ## Author 👨‍💻
 
 *   **Bryan Ogya Kusuma**
+*   **Ahmad Ghifari Ramadhani**
+*   **Muhammad Alvarezi Usamah**
 
 ## Important Links 🔗
 
