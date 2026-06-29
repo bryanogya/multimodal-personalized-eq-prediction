@@ -1,0 +1,34 @@
+device_name,num_measurements,output_path,min_db,max_db,mean_db
+7Hz Salnotes x Crinacle Zero 2,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\7Hz Salnotes x Crinacle Zero 2.npy,-20.0,11.517517202850486,3.075897647821054
+7Hz Salnotes Zero,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\7Hz Salnotes Zero.npy,-20.0,9.125808673212662,2.8886431400084907
+Blon BL03,1,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\Blon BL03.npy,-20.0,9.89784014655499,3.5461357549089936
+Blon BL05,1,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\Blon BL05.npy,-20.0,9.267912193111016,2.753280520753589
+CCA CRA Plus,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\CCA CRA Plus.npy,-20.0,9.684479811783033,4.336836715868023
+CCA CRA,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\CCA CRA.npy,-20.0,12.893776090660397,4.308450643274048
+Kinera Celest Wyvern Abyss,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\Kinera Celest Wyvern Abyss.npy,-20.0,10.022600270812378,3.2066195336290946
+Kinera Freya,1,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\Kinera Freya.npy,-20.0,14.056629151073716,3.361356702380971
+Kiwi Ears Cadenza,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\Kiwi Ears Cadenza.npy,-20.0,9.112048120038502,2.9012832037016976
+Kiwi Ears Quintet,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\Kiwi Ears Quintet.npy,-15.362796000926556,9.443004791251573,2.9046908746375952
+KZ Castor (DDDD),2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\KZ Castor (DDDD).npy,-20.0,12.388084465000674,5.245239326531463
+KZ Castor (DDUU),2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\KZ Castor (DDUU).npy,-20.0,10.044935503446704,3.62185450092882
+KZ Castor (UUDD),2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\KZ Castor (UUDD).npy,-20.0,13.54406962218038,5.496447021670496
+KZ Castor (UUUU),2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\KZ Castor (UUUU).npy,-20.0,10.13014399800115,3.8780311659029056
+KZ EDX Pro,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\KZ EDX Pro.npy,-20.0,12.75693756195126,5.47521659438565
+KZ ZS10,1,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\KZ ZS10.npy,-20.0,11.466588209688096,4.709151964141225
+KZ ZSN Pro,1,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\KZ ZSN Pro.npy,-20.0,12.561937585739265,5.419828572909783
+Letshuoer S08,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\Letshuoer S08.npy,-20.0,8.632097421830355,2.7293828106710403
+Letshuoer S12,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\Letshuoer S12.npy,-16.937915589117083,12.05848584894432,3.6681082812889465
+Moondrop Aria 2,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\Moondrop Aria 2.npy,-18.875412722864912,7.673295993923098,3.085738247217308
+Moondrop Chu 2,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\Moondrop Chu 2.npy,-20.0,10.850072847687251,4.223329147602573
+QKZ x HBB Hades,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\QKZ x HBB Hades.npy,-20.0,17.309425498330953,7.417523769550659
+QKZ x HBB,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\QKZ x HBB.npy,-18.095329069492163,11.025855564756744,3.785306086900394
+Tanchjim Bunny,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\Tanchjim Bunny.npy,-18.33047198297428,7.303234069626055,2.865177457978173
+Tanchjim Zero,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\Tanchjim Zero.npy,-8.71456333209059,11.135377060938191,3.852773576927432
+Tangzu Wan'er,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\Tangzu Wan'er.npy,-15.110061455737716,8.041368946707541,2.6357579479927953
+Tangzu Wu Zetian,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\Tangzu Wu Zetian.npy,-10.323652479747743,11.583376433975511,3.841327250131447
+Tin Hifi C0 Elf,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\Tin Hifi C0 Elf.npy,-18.450251259976714,7.190516945868403,1.9816442013082125
+Tin Hifi C2 Mech Warrior,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\Tin Hifi C2 Mech Warrior.npy,-15.45413332202984,8.154924880013706,3.5102195200391293
+Truthear Hexa,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\Truthear Hexa.npy,-10.57083957187726,9.195103000035123,2.862763850041132
+Truthear Hola,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\Truthear Hola.npy,-20.0,9.407673601409742,2.7000427960472653
+Truthear Nova,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\Truthear Nova.npy,-15.760897052423585,9.524421536717933,2.6760944967225484
+Truthear x Crinacle Zero_ Red,2,E:\Kuliah\SMT 8\DEEP-LEARNING\Final_Project\data\processed\device\Truthear x Crinacle Zero_ Red.npy,-20.0,7.630892099951468,2.2397706236082087

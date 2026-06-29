@@ -1,0 +1,34 @@
+# Raw audio data
+*.wav
+*.npy
+*.npz
+
+# Model checkpoints
+*.pt
+*.pth
+*.ckpt
+*.h5
+*.keras
+
+# Ignore heavy outputs
+outputs/baseline/
+outputs/ablation/
+outputs/evaluation/
+
+# Keep figures
+!outputs/figures/
+!outputs/figures/**/*.png
+
+# Python cache
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# OS files
+.DS_Store
+Thumbs.db
