@@ -89,29 +89,28 @@ This project provides several entry points for training, evaluation, and visuali
 * **Training**: `python main.py --mode train`
 * **Auxiliary Training (for response curve prediction)**: `python main.py --mode train_aux`
 * **Evaluation**: `python main.py --mode evaluate`
+* **Auxiliary Evaluation**: `python main.py --mode evaluate_aux`
 * **Baseline Evaluation**: `python main.py --mode baseline`
 * **Ablation Study**: `python main.py --mode ablation`
-* **Inference/Prediction**: `python main.py --mode predict` (Requires specifying input files)
+* **Inference/Prediction**: `python main.py --mode predict --audio <audio.npy> --device <device.npy> --preference <preference.npy>`
 
 **Visualization Scripts:**
 
-* **Training Plots**: `python src/visualization/training_plot.py`
-* **Ablation Comparison Plots**: `python src/visualization/ablation_comparison.py`
-* **Baseline Comparison Plots**: `python src/visualization/baseline_comparison.py`
-* **Per-Band Error Histograms**: `python src/visualization/histogram_error.py`
-* **Prediction vs. Target Scatter Plots**: `python src/visualization/scatter_prediction.py`
-* **Sensitivity Analysis Plots**: `python src/visualization/sensitivity_plot.py`
-* **Target Curve Visualizations**: `python src/visualization/target_curve.py`
+* **Training Plots**: `python main.py --mode training_plot`
+* **Ablation Comparison Plots**: `python main.py --mode ablation_plot`
+* **Baseline Comparison Plots**: `python main.py --mode baseline_plot`
+* **Prediction Plots**: `python main.py --mode prediction_plot`
 
 **Example Prediction:**
 
 To predict EQ for a specific audio sample, device response, and preference:
 
 ```bash
-python inference/predict.py \
+python main.py --mode predict \
     --audio data/processed/audio/sample_0001.npy \
     --device data/processed/device/7Hz Salnotes Zero.npy \
-    --preference data/processed/preferences/user_preferences.npy
+    --preference data/processed/preferences/user_preferences.npy \
+    --preference-index 0
 ```
 
 ## Project Structure 📁

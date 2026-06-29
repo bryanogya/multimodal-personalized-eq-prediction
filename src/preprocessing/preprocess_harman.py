@@ -4,42 +4,51 @@ import pandas as pd
 from configs.paths import RAW_HARMAN_FILE, PROC_HARMAN_FILE
 from configs.frequencies import TARGET_FREQ
 
-PROC_HARMAN_FILE.parent.mkdir(exist_ok=True)
 
-data_harman = pd.read_csv(
-    RAW_HARMAN_FILE,
-    sep=r'\s+',
-    header=None
-)
+def preprocess_harman():
+    PROC_HARMAN_FILE.parent.mkdir(parents=True, exist_ok=True)
 
-data_harman.columns = [
-    "frequency",
-    "target"
-]
+    data_harman = pd.read_csv(
+        RAW_HARMAN_FILE,
+        sep=r"\s+",
+        header=None
+    )
 
-harman_freqs = data_harman["frequency"].values
-harman_target = data_harman["target"].values
+    data_harman.columns = [
+        "frequency",
+        "target"
+    ]
 
-idx_1k = np.argmin(
-    np.abs(harman_freqs - 1000)
-)
+    harman_freqs = data_harman["frequency"].values
+    harman_target = data_harman["target"].values
 
-harman_target = (
-    harman_target -
-    harman_target[idx_1k]
-)
+    idx_1k = np.argmin(
+        np.abs(harman_freqs - 1000)
+    )
 
-harman_interp = np.interp(
-    TARGET_FREQ,
-    harman_freqs,
-    harman_target
-)
+    harman_target = (
+        harman_target -
+        harman_target[idx_1k]
+    )
 
-np.save(
-    PROC_HARMAN_FILE,
-    harman_interp.astype(np.float32)
-)
+    harman_interp = np.interp(
+        TARGET_FREQ,
+        harman_freqs,
+        harman_target
+    )
 
-print(
-    f"Harman target saved: {PROC_HARMAN_FILE}"
-)
+    np.save(
+        PROC_HARMAN_FILE,
+        harman_interp.astype(np.float32)
+    )
+
+    return PROC_HARMAN_FILE
+
+
+def main():
+    output_path = preprocess_harman()
+    print(f"Harman target saved: {output_path}")
+
+
+if __name__ == "__main__":
+    main()

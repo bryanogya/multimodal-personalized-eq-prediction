@@ -1,10 +1,10 @@
 import random
 import numpy as np
-import pandas as pd
 import torch
 from torch.utils.data import Dataset
 
 from configs.paths import PROJECT_ROOT, PROC_DEVICE_DIR, PROC_HARMAN_FILE, PREFERENCE_FILE
+from configs.training import RANDOM_SEED
 from src.utils.generate_target_eq import generate_target_eq
 
 
@@ -17,19 +17,41 @@ class AudioEQDataset(Dataset):
     frequency response, a randomly selected preference vector, and
     generated target EQ values.
     """
-    def __init__(self,metadata_df):
+    def __init__(self, metadata_df, deterministic=False, seed=RANDOM_SEED):
         """
         Initialize the dataset from audio metadata and load shared target data.
 
         Args:
             metadata_df: DataFrame containing audio feature paths and metadata.
+            deterministic: Whether to use fixed device/preference choices.
+            seed: Seed used for deterministic device/preference assignment.
         """
         self.df = metadata_df.reset_index(drop=True)
+        self.deterministic = deterministic
         
         self.harman_target = np.load(PROC_HARMAN_FILE).astype(np.float32)
         self.preferences = np.load(PREFERENCE_FILE).astype(np.float32)
-        self.device_files = list(PROC_DEVICE_DIR.glob("*.npy"))
+        self.device_files = sorted(PROC_DEVICE_DIR.glob("*.npy"))
         self.device_cache = {}
+
+        if not self.device_files:
+            raise FileNotFoundError(f"No processed device files found in {PROC_DEVICE_DIR}")
+
+        if len(self.preferences) == 0:
+            raise ValueError(f"No preferences found in {PREFERENCE_FILE}")
+
+        if self.deterministic:
+            rng = np.random.default_rng(seed)
+            self.device_indices = rng.integers(
+                low=0,
+                high=len(self.device_files),
+                size=len(self.df)
+            )
+            self.preference_indices = rng.integers(
+                low=0,
+                high=len(self.preferences),
+                size=len(self.df)
+            )
 
     def __len__(self):
         """
@@ -40,7 +62,7 @@ class AudioEQDataset(Dataset):
         """
         return len(self.df)
 
-    def load_device(self,device_path):
+    def load_device(self, device_path):
         """
         Load a device frequency response and cache it in memory.
 
@@ -75,16 +97,24 @@ class AudioEQDataset(Dataset):
             dtype=torch.float32
         ).unsqueeze(0)
 
-        # RANDOM DEVICE
-        device_path = random.choice(self.device_files)
+        # DEVICE
+        if self.deterministic:
+            device_path = self.device_files[self.device_indices[idx]]
+        else:
+            device_path = random.choice(self.device_files)
+
         device_response = self.load_device(device_path)
         device_tensor = torch.tensor(
             device_response,
             dtype=torch.float32
         )
 
-        # RANDOM PREFERENCE
-        pref_idx = random.randint(0, len(self.preferences) - 1)
+        # PREFERENCE
+        if self.deterministic:
+            pref_idx = self.preference_indices[idx]
+        else:
+            pref_idx = random.randint(0, len(self.preferences) - 1)
+
         preference = self.preferences[pref_idx].astype(np.float32)
         preference_tensor = torch.tensor(
             preference,

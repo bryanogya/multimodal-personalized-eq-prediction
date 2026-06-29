@@ -1,4 +1,5 @@
 import pandas as pd
+import torch
 
 from sklearn.model_selection import GroupShuffleSplit
 from torch.utils.data import DataLoader
@@ -6,6 +7,18 @@ from torch.utils.data import DataLoader
 from configs.paths import AUDIO_METADATA_FILE, SPLITS_DIR
 from configs.training import BATCH_SIZE, NUM_WORKERS, RANDOM_SEED
 from src.dataset.dataset import AudioEQDataset
+
+
+def seed_worker(worker_id):
+    """
+    Seed Python and NumPy RNGs inside DataLoader workers.
+    """
+    worker_seed = torch.initial_seed() % 2**32
+    import random
+    import numpy as np
+
+    random.seed(worker_seed)
+    np.random.seed(worker_seed)
 
 
 def split_metadata_by_group(df):
@@ -147,16 +160,33 @@ def create_dataloaders():
         test_df
     )
 
-    train_dataset = AudioEQDataset(metadata_df=train_df)
-    val_dataset = AudioEQDataset(metadata_df=val_df)
-    test_dataset = AudioEQDataset(metadata_df=test_df)
+    train_dataset = AudioEQDataset(
+        metadata_df=train_df,
+        deterministic=False
+    )
+    val_dataset = AudioEQDataset(
+        metadata_df=val_df,
+        deterministic=True,
+        seed=RANDOM_SEED + 1
+    )
+    test_dataset = AudioEQDataset(
+        metadata_df=test_df,
+        deterministic=True,
+        seed=RANDOM_SEED + 2
+    )
+
+    generator = torch.Generator()
+    generator.manual_seed(RANDOM_SEED)
+    pin_memory = torch.cuda.is_available()
 
     train_loader = DataLoader(
         train_dataset,
         batch_size=BATCH_SIZE,
         shuffle=True,
         num_workers=NUM_WORKERS,
-        pin_memory=True
+        pin_memory=pin_memory,
+        worker_init_fn=seed_worker,
+        generator=generator
     )
 
     val_loader = DataLoader(
@@ -164,7 +194,9 @@ def create_dataloaders():
         batch_size=BATCH_SIZE,
         shuffle=False,
         num_workers=NUM_WORKERS,
-        pin_memory=True
+        pin_memory=pin_memory,
+        worker_init_fn=seed_worker,
+        generator=generator
     )
 
     test_loader = DataLoader(
@@ -172,7 +204,9 @@ def create_dataloaders():
         batch_size=BATCH_SIZE,
         shuffle=False,
         num_workers=NUM_WORKERS,
-        pin_memory=True
+        pin_memory=pin_memory,
+        worker_init_fn=seed_worker,
+        generator=generator
     )
 
     print("\nDataLoader Ready")

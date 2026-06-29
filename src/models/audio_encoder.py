@@ -4,12 +4,15 @@ import torch.nn as nn
 from configs.model import NUM_BANDS, AUDIO_EMBED_DIM, AUDIO_NUM_HEADS, AUDIO_NUM_LAYERS, AUDIO_PATCH_SIZE, AUDIO_DROPOUT 
 
 
+FIXED_TIME_STEPS = 256
+
+
 class AudioEncoder(nn.Module):
     def __init__(self):
         super(AudioEncoder, self).__init__()
         
         # 1. Fix input time dimension agar sequence length konsisten
-        self.fix_time = nn.AdaptiveAvgPool2d((NUM_BANDS, 256))
+        self.fix_time = nn.AdaptiveAvgPool2d((NUM_BANDS, FIXED_TIME_STEPS))
         
         # 2. Convolutional Patch Embedding 
         self.patch_conv = nn.Conv2d(
@@ -20,7 +23,7 @@ class AudioEncoder(nn.Module):
         )
         
         # 3. Positional Encoding (Learnable)
-        self.seq_len = (NUM_BANDS // AUDIO_PATCH_SIZE) * (AUDIO_EMBED_DIM // AUDIO_PATCH_SIZE)
+        self.seq_len = (NUM_BANDS // AUDIO_PATCH_SIZE) * (FIXED_TIME_STEPS // AUDIO_PATCH_SIZE)
         self.pos_encoding = nn.Parameter(torch.randn(1, self.seq_len, AUDIO_EMBED_DIM))
         
         # 4. Transformer Encoder

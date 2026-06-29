@@ -5,7 +5,7 @@ import numpy as np
 import torch
 
 from configs.paths import CHECKPOINT_DIR, PROJECT_ROOT
-from configs.training import DEVICE
+from configs.eq import EQ_FREQS
 from src.models.multimodal_model import MultimodalEQModel
 
 
@@ -56,7 +56,7 @@ def load_model(checkpoint_path, run_device):
     return model
 
 
-def load_input(audio_path, device_path, preference_path):
+def load_input(audio_path, device_path, preference_path, preference_index=0):
     """
     Load processed audio, device response, and preference vector.
 
@@ -72,11 +72,36 @@ def load_input(audio_path, device_path, preference_path):
     device_path = resolve_path(device_path)
     preference_path = resolve_path(preference_path)
 
+    for input_path in (audio_path, device_path, preference_path):
+        if not input_path.exists():
+            raise FileNotFoundError(f"Input file not found: {input_path}")
+
     audio = np.load(audio_path).astype(np.float32)
     device = np.load(device_path).astype(np.float32)
     preference = np.load(preference_path).astype(np.float32)
 
-    audio = torch.tensor(audio).unsqueeze(0)
+    if audio.ndim != 2:
+        raise ValueError(
+            f"Expected audio mel-spectrogram with shape [n_mels, time], got {audio.shape}"
+        )
+
+    if device.ndim != 1:
+        raise ValueError(
+            f"Expected device response with shape [freq_bins], got {device.shape}"
+        )
+
+    if preference.ndim == 2:
+        if not 0 <= preference_index < len(preference):
+            raise IndexError(
+                f"Preference index {preference_index} is outside 0..{len(preference) - 1}"
+            )
+        preference = preference[preference_index]
+    elif preference.ndim != 1:
+        raise ValueError(
+            f"Expected preference vector [3] or preference table [n, 3], got {preference.shape}"
+        )
+
+    audio = torch.tensor(audio).unsqueeze(0).unsqueeze(0)
     device = torch.tensor(device).unsqueeze(0)
     preference = torch.tensor(preference).unsqueeze(0)
 
@@ -156,9 +181,16 @@ def main():
         help="Path to trained model checkpoint"
     )
 
+    parser.add_argument(
+        "--preference-index",
+        type=int,
+        default=0,
+        help="Row to use when --preference points to a table of preference vectors"
+    )
+
     args = parser.parse_args()
 
-    run_device = torch.device(DEVICE)
+    run_device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     checkpoint_path = resolve_path(args.checkpoint)
 
@@ -167,11 +199,15 @@ def main():
         run_device
     )
 
-    audio, device, preference = load_input(
-        args.audio,
-        args.device,
-        args.preference
-    )
+    try:
+        audio, device, preference = load_input(
+            args.audio,
+            args.device,
+            args.preference,
+            preference_index=args.preference_index
+        )
+    except (FileNotFoundError, IndexError, ValueError) as exc:
+        parser.error(str(exc))
 
     pred_eq = predict_eq(
         model,
@@ -182,8 +218,8 @@ def main():
     )
 
     print("\nPredicted EQ:")
-    for index, value in enumerate(pred_eq):
-        print(f"Band {index + 1}: {value:.4f} dB")
+    for freq, value in zip(EQ_FREQS, pred_eq):
+        print(f"{freq:>7.0f} Hz: {value:.4f} dB")
 
 
 if __name__ == "__main__":
