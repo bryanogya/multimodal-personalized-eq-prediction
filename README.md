@@ -1,215 +1,225 @@
-# Final Project Deep Learning
+# Multimodal Personalized EQ Prediction 🎧✨
 
-Project ini membangun model deep learning multimodal untuk memprediksi parameter equalizer berdasarkan fitur audio, karakteristik device, dan preferensi pengguna.
+This project leverages deep learning to predict personalized audio equalizer (EQ) settings by utilizing multimodal input data. It combines audio features, device-specific frequency responses, and user preference data to intelligently adjust EQ settings, aiming for an audio experience that better matches individual listening preferences.
 
-## Struktur Folder
+## Table of Contents
+
+* [Project Overview](#project-overview)
+* [Features](#features)
+* [Tech Stack](#tech-stack)
+* [Dataset](#dataset)
+* [Model Input Configurations](#model-input-configurations)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Project Structure](#project-structure)
+* [Evaluation Metrics](#evaluation-metrics)
+* [Baseline Comparison](#baseline-comparison)
+* [Ablation Study](#ablation-study)
+* [Key Findings](#key-findings)
+* [License](#license)
+* [Contributing](#contributing)
+* [Author](#author)
+
+## Project Overview 🚀
+
+Personalized equalizer prediction is a complex task that aims to tailor audio output to individual user tastes. This project moves beyond generic EQ profiles by learning from several distinct data sources:
+
+- **Audio Data**: Extracted Mel-spectrograms to capture the acoustic characteristics of audio content.
+- **Device Data**: Frequency response data specific to audio playback devices (e.g., headphones, speakers).
+- **User Preference Data**: Learned embeddings representing individual listening preferences.
+
+The ultimate goal is to build a model that fuses these modalities to deliver superior EQ predictions, enhancing the listening experience.
+
+## Features ⭐
+
+* **Multimodal Fusion**: Integrates audio features, device frequency responses, and user preferences.
+* **Personalized EQ Prediction**: Tailors EQ settings based on individual user preferences.
+* **Comprehensive Evaluation**: Assesses model performance using various metrics including MSE, MAE, RMSE, Spectral Convergence (SC), and Log Spectral Distance (LSD).
+* **Ablation Studies**: Analyzes the contribution of each modality (audio, device, preference) to the overall prediction accuracy.
+* **Baseline Comparisons**: Benchmarks against simple methods like Zero EQ and Mean EQ to demonstrate the model's effectiveness.
+* **Visualization Tools**: Generates plots for training history, correlation matrices, scatter plots of predictions vs. targets, and sensitivity analyses.
+
+## Tech Stack 🛠️
+
+* **Primary Language**: Python 
+* **Frameworks**: PyTorch, NumPy, Pandas, Matplotlib, Librosa, Scikit-learn
+* **Data Handling**: CSV, NPZ, NPY
+
+## Dataset 📊
+
+This project utilizes three primary datasets:
+
+| Dataset             | Amount     | Description                                     |
+| ------------------- | ---------- | ----------------------------------------------- |
+| GTZAN Audio         | 300 samples| Audio samples for feature extraction            |
+| Squiglink Device    | 30 devices | Device-specific frequency response data         |
+| User Preference     | 50 profiles| Learned user preference vectors                 |
+
+## Model Input Configurations ⚙️
+
+The model's performance is evaluated across different input combinations to understand the impact of each modality:
+
+| Model Variant         | Input Used                                 |
+| --------------------- | ------------------------------------------ |
+| Audio Only            | Audio features only                        |
+| Audio + Device        | Audio features and device information      |
+| Audio + Preference    | Audio features and user preference         |
+| Device + Preference   | Device information and user preference     |
+| **Full Model**        | Audio, device, and user preference         |
+
+## Installation 📋
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/bryanogya/multimodal-personalized-eq-prediction.git
+   cd multimodal-personalized-eq-prediction
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+## Usage ▶️
+
+This project provides several entry points for training, evaluation, and visualization.
+
+**Core Scripts:**
+
+* **Training**: `python main.py --mode train`
+* **Auxiliary Training (for response curve prediction)**: `python main.py --mode train_aux`
+* **Evaluation**: `python main.py --mode evaluate`
+* **Baseline Evaluation**: `python main.py --mode baseline`
+* **Ablation Study**: `python main.py --mode ablation`
+* **Inference/Prediction**: `python main.py --mode predict` (Requires specifying input files)
+
+**Visualization Scripts:**
+
+* **Training Plots**: `python src/visualization/training_plot.py`
+* **Ablation Comparison Plots**: `python src/visualization/ablation_comparison.py`
+* **Baseline Comparison Plots**: `python src/visualization/baseline_comparison.py`
+* **Per-Band Error Histograms**: `python src/visualization/histogram_error.py`
+* **Prediction vs. Target Scatter Plots**: `python src/visualization/scatter_prediction.py`
+* **Sensitivity Analysis Plots**: `python src/visualization/sensitivity_plot.py`
+* **Target Curve Visualizations**: `python src/visualization/target_curve.py`
+
+**Example Prediction:**
+
+To predict EQ for a specific audio sample, device response, and preference:
+
+```bash
+python inference/predict.py \
+    --audio data/processed/audio/sample_0001.npy \
+    --device data/processed/device/7Hz Salnotes Zero.npy \
+    --preference data/processed/preferences/user_preferences.npy
+```
+
+## Project Structure 📁
 
 ```text
-Final_Project/
-├── configs/                 # Konfigurasi path, model, training, dan plotting
-├── data/                    # Dataset raw dan processed
-├── checkpoints/             # Checkpoint model dan hasil training
-├── notebooks/               # Notebook eksplorasi
-├── outputs/                 # Output visualisasi dan hasil eksperimen
-├── src/                     # Source code utama
-│   ├── data/                # Dataset loader dan data split
-│   ├── evaluation/          # Evaluasi, baseline, dan ablation study
-│   ├── models/              # Arsitektur model
-│   ├── preprocessing/       # Preprocessing audio, device, dan preference
-│   ├── training/            # Training pipeline
-│   ├── utils/               # Utility function
-│   └── visualization/       # Visualisasi hasil eksperimen
-├── requirements.txt         # Dependency project
-└── README.md                # Dokumentasi project
+multimodal-personalized-eq-prediction/
+├── configs/         # Configuration files (paths, model params, training settings)
+│   ├── audio.py
+│   ├── dataset.py
+│   ├── eq.py
+│   ├── frequencies.py
+│   ├── model.py
+│   ├── paths.py
+│   ├── plot_style.py
+│   ├── preferences.py
+│   └── training.py
+│
+├── data/
+│   ├── raw/         # Raw datasets (audio, device responses)
+│   ├── processed/   # Processed data (features, normalized responses)
+│   ├── metadata/    # Metadata CSV files
+│   └── splits/      # Train/val/test split definitions
+│
+├── src/
+│   ├── dataset/     # Data loading and preprocessing
+│   ├── evaluation/  # Evaluation scripts and metrics
+│   ├── inference/   # Inference and prediction logic
+│   ├── models/      # Neural network model definitions
+│   ├── preprocessing/ # Scripts for data preprocessing
+│   ├── training/    # Training scripts and loss functions
+│   └── visualization/ # Scripts for generating plots and reports
+│
+├── checkpoints/    # Saved model checkpoints and experiment results
+│   ├── ablation/
+│   ├── aux_model/
+│   └── full_model/
+│
+├── outputs/
+│   ├── figures/     # Generated plots and visualizations
+│   ├── baseline/
+│   └── ablation/
+│
+├── requirements.txt # Project dependencies
+└── main.py          # Main entry point for running experiments
 ```
 
-## Instalasi
+## Evaluation Metrics 🎯
 
-Buat environment Python, lalu install dependency:
+Model performance is assessed using the following metrics:
 
-```bash
-pip install -r requirements.txt
-```
+| Metric | Description                                       |
+| ------ | ------------------------------------------------- |
+| MSE    | Mean Squared Error (lower is better)              |
+| MAE    | Mean Absolute Error (lower is better)             |
+| RMSE   | Root Mean Squared Error (lower is better)         |
+| SC     | Spectral Convergence (higher is better)           |
+| LSD    | Log Spectral Distance (lower is better)           |
 
-## Menjalankan Project
+## Baseline Comparison ⚖️
 
-Project ini dapat dijalankan melalui `main.py` dari root folder project.
+This project compares the proposed deep learning model against simple baseline methods:
 
-Training model utama:
+| Baseline       | Description                                      |
+| -------------- | ------------------------------------------------ |
+| Zero EQ        | Predicts zero gain for all EQ bands.           |
+| Mean EQ        | Predicts the average EQ values from the training set. |
+| Proposed Model | The trained multimodal deep learning model.      |
 
-```bash
-python main.py --mode train
-```
+The baseline comparison validates the model's ability to learn meaningful EQ patterns beyond trivial predictions.
 
-Evaluasi Model:
+## Ablation Study 🔬
 
-```bash
-python main.py --mode evaluate
-```
+An ablation study is conducted to quantify the impact of each input modality on EQ prediction performance. The following variants are evaluated:
 
-Inference untuk satu input baru:
+*   **Audio Only**
+*   **Audio + Device**
+*   **Audio + Preference**
+*   **Device + Preference**
+*   **Full Model (Audio + Device + Preference)**
 
-```bash
-python main.py --mode predict --audio data/processed/audio/sample_0000.npy --device data/processed/device/device_0000.npy --preference data/processed/preference/preference_0000.npy
-```
+This analysis highlights the contribution of each feature set to personalized EQ prediction.
 
-Ablation Study:
+## Key Findings 💡
 
-```bash
-python main.py --mode ablation
-```
+*   **Audio features** serve as the primary signal for EQ prediction.
+*   **Device information** aids in understanding playback characteristics, refining predictions.
+*   **User preference data** is crucial for personalization, adapting EQ to individual tastes.
+*   The **Full Model**, utilizing all modalities, demonstrates the most robust performance, indicating the synergistic benefit of combining diverse data sources.
+*   The ablation study confirms the importance of **multimodal integration** for achieving accurate and personalized EQ.
 
-Visualisasi prediksi:
+## License 📜
 
-```bash
-python main.py --mode prediction_plot
-```
+This project is intended for academic and research purposes.
 
-Melihat daftar mode yang tersedia:
+## Contributing 🤝
 
-```bash
-python main.py --help
-```
+Contributions are welcome! Please feel free to submit pull requests or open issues for any improvements or bug fixes.
 
-## Preprocessing Data
+## Author 👨‍💻
 
-Jalankan preprocessing audio:
+*   **Bryan Ogya Kusuma**
+*   **Ahmad Ghifari Ramadhani**
+*   **Muhammad Alvarezi Usamah**
 
-```bash
-python -m src.preprocessing.audio_preprocessing
-```
+## Important Links 🔗
 
-Jalankan preprocessing device:
+*   **Repository**: [multimodal-personalized-eq-prediction](https://github.com/bryanogya/multimodal-personalized-eq-prediction)
+*   **GTZAN Dataset**: [GTZAN Dataset-Music Genre Classification](https://www.kaggle.com/datasets/andradaolteanu/gtzan-dataset-music-genre-classification)
+*   **SquigLink**: [Squiglink - IEM frequency response database by Super* Review](https://squig.link/)
 
-```bash
-python -m src.preprocessing.device_preprocessing
-```
-
-Jalankan preprocessing preference:
-
-```bash
-python -m src.preprocessing.preference_preprocessing
-```
-
-## Training Model
-
-Training model utama:
-
-```bash
-python -m src.training.train
-```
-
-Training auxiliary model:
-
-```bash
-python -m src.training.train_aux
-```
-
-Output training akan tersimpan di:
-
-```text
-checkpoints/
-```
-
-## Evaluasi Model
-
-Evaluasi model pada test set:
-
-```bash
-python -m src.evaluation.test
-```
-
-Evaluasi baseline:
-
-```bash
-python -m src.evaluation.baseline
-```
-
-Ablation study:
-
-```bash
-python -m src.evaluation.ablation
-```
-
-Analisis worst prediction:
-
-```bash
-python main.py --mode worst_prediction
-```
-
-Output evaluasi tersimpan dalam bentuk file JSON, NPY, atau NPZ di folder checkpoint masing-masing eksperimen.
-
-## Visualisasi
-
-Contoh menjalankan visualisasi prediksi:
-
-```bash
-python -m src.visualization.prediction_plot
-```
-
-Visualisasi lain tersedia di:
-
-```text
-src/visualization/
-```
-
-Output gambar tersimpan di:
-
-```text
-outputs/figures/
-```
-
-## Konfigurasi
-
-Seluruh konfigurasi utama disimpan di folder:
-
-```text
-configs/
-```
-
-File penting:
-
-```text
-configs/paths.py       # Konfigurasi path project
-configs/model.py       # Konfigurasi arsitektur model
-configs/training.py    # Konfigurasi training dan hyperparameter
-configs/plot_style.py  # Konfigurasi tampilan plot
-configs/eq.py          # Konfigurasi frequency band equalizer
-```
-
-## Output Penting
-
-Beberapa output utama project:
-
-```text
-checkpoints/full_model/best_model.pth
-checkpoints/full_model/test_metrics.json
-checkpoints/full_model/test_results.npz
-checkpoints/baseline/baseline_metrics.json
-checkpoints/ablation/ablation_result.json
-checkpoints/full_model/experiment_config.json
-checkpoints/full_model/worst_predictions.json
-outputs/figures/
-```
-
-## Dokumentasi Struktur Project
-
-Struktur lengkap project dapat dilihat pada file:
-
-```text
-final_project_structure.txt
-
-## Reproducibility
-
-Project menggunakan konfigurasi terpusat dan random seed untuk menjaga hasil eksperimen tetap konsisten.
-
-Konfigurasi seed dapat dicek di:
-
-```text
-configs/training.py
-```
-
-## Catatan
-
-Pastikan data sudah diproses sebelum menjalankan training atau evaluasi.
-Pastikan semua path memakai konfigurasi dari `configs/paths.py`.
+---
